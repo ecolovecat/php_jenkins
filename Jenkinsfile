@@ -14,11 +14,23 @@ pipeline {
             }
         }
 
-        stage('Deploy to /var/www/html/LoginSystem') {
+        stage('Install dependencies') {
             steps {
-                sh 'rm -rf /var/www/html/LoginSystem'
-                sh 'cp -r . /var/www/html/LoginSystem'
+                sh 'composer install'
             }
         }
+
+        stage('Run Test') {
+            steps {
+                sh './vendor/bin/phpunit --configuration phpunit.xml'
+            }
+        }
+
+        stage('Deploy to /var/www/html/LoginSystem') {
+        steps {
+            sh 'rm -rf /var/www/html/LoginSystem'
+            sh 'cp -r . /var/www/html/LoginSystem'
+        }
+      }
     }
 }
